@@ -1,3 +1,6 @@
+	// stupid FF FOUT fix
+	$('h1 span').css('display', 'inline-block');
+	
 	var canvas = document.getElementById('curve'),
 		ctx = canvas.getContext('2d'),
 		box = document.getElementById('box'),
@@ -76,7 +79,7 @@
 		
 		// to get rid of text cursor
 		event.preventDefault();
-		event.stopPropagation();
+		event.stopPropagation(); //not sure if this is needed
 		
 		var cursorEvent = supportTouches ? event.touches[0] : event;
 		
@@ -111,16 +114,24 @@
 					//console.log('over')
 					drag = true;
 					draggingObj = current;
-					oldX = x;
-					oldY = y;
+					oldX = event.pageX;
+					oldY = event.pageY;
 					
 					var currentlySelected = $('#presets option:selected');
 					
 					currentlySelected.attr('selected', '')
 									 .parent().parent().find('option').last().attr('selected', 'selected');
 									
+					
+					document.addEventListener('mouseup', onRelease, false);
+					document.addEventListener('touchend', touchEnd, false);
+					
+					document.addEventListener('mousemove', onMove, false);
+					document.addEventListener('touchmove', touchMove, false);
+					
+				
 					// set move cursor
-					event.target.style.cursor = 'move';
+					document.body.style.cursor = canvas.style.cursor = 'move';
 					
 			}
 		}
@@ -133,18 +144,47 @@
 		var cursorEvent = supportTouches ? event.touches[0] : event;
 		
 		if (drag) {
-			var mouseCoordinates = getPos(cursorEvent),
-				x = mouseCoordinates.x,
-				y = mouseCoordinates.y;
 			
+			var overCanvas = ( cursorEvent.pageX >= getOffSet(canvas).left &&
+							   cursorEvent.pageX <= ( getOffSet(canvas).left + canvas.width ) &&
+							   cursorEvent.pageY >= getOffSet(canvas).top && 
+							   cursorEvent.pageY <= ( getOffSet(canvas).top + canvas.height )
+							 );
+
+			var outAbove = ( cursorEvent.pageY <= getOffSet(canvas).top ),
+				outBelow = ( cursorEvent.pageY >= ( getOffSet(canvas).top + canvas.height ) ),
+				outLeft = ( cursorEvent.pageX <= getOffSet(canvas).left ),
+				outRight = ( cursorEvent.pageX >= ( getOffSet(canvas).left + canvas.width ) );
+			
+			var x = cursorEvent.pageX,
+				y = cursorEvent.pageY;
+	
 			//console.log('x:', x, 'y:', y)
-			
+	
 			// get oldX, get x, subtract to get the delta
 			dx = x - oldX;
 			dy = y - oldY;
 			
-			draggingObj.x += dx;
-			draggingObj.y += dy;
+			// if over canvas, move normally
+			if (overCanvas) {
+				
+				draggingObj.x += dx;
+				draggingObj.y += dy;
+			
+			// otherwise its moved to one of the sides, move accordingly
+			} else if (outAbove && !outLeft && !outRight) {
+				draggingObj.x += dx;
+				draggingObj.y = 0;
+			} else if (outBelow && !outLeft && !outRight) {
+				draggingObj.x += dx;
+				draggingObj.y = canvas.height;
+			} else if (outLeft && !outAbove && !outBelow) {
+				draggingObj.x = 0;
+				draggingObj.y += dy;
+			} else if (outRight && !outAbove && !outBelow) {
+				draggingObj.x = canvas.width;
+				draggingObj.y += dy;
+			}
 			
 			// make sure its within the bounds
 			if (draggingObj.x < 0) draggingObj.x = 0;
@@ -152,13 +192,19 @@
 			if (draggingObj.y < 0) draggingObj.y = 0;
 			if (draggingObj.y > canvas.height) draggingObj.y = canvas.height;
 			
+			updateDrawing();
+			
 			// set the new oldX
 			oldX = x;
 			oldY = y;
-			
-			updateDrawing();
+		
 		}
 		
+	}
+	
+	function touchMove(event) {
+		onMove(event);
+		event.preventDefault();
 	}
 	
 	function onRelease(event) {
@@ -166,28 +212,28 @@
 		drag = false;
 		
 		// restore pointer cursor
-		event.target.style.cursor = 'pointer';
+		canvas.style.cursor = 'pointer';
+		document.body.style.cursor = 'default';
+		
+		document.removeEventListener('mousemove', onMove, false);
+		document.removeEventListener('touchmove', touchMove, false); 
+		document.removeEventListener('mouseup', onRelease, false);
+		document.removeEventListener('touchend', touchEnd, false);
+	}
+	
+	function touchEnd(event) {
+		onRelease(event);
+		event.preventDefault();
 	}
 	
 	
-	
-	canvas.addEventListener('mousemove', onMove, false);
-	canvas.addEventListener('touchmove', function(event) {
-		onMove(event);
-		event.preventDefault();
-	}, false);
-	
 	canvas.addEventListener('mousedown', onPress, false);
-	canvas.addEventListener('touchstart', function(event) {
+	canvas.addEventListener('touchstart', function touchPress(event) {
 		onPress(event);
 		event.preventDefault();
 	}, false);
 	
-	canvas.addEventListener('mouseup', onRelease, false);
-	canvas.addEventListener('touchend', function(event) {
-		onRelease(event);
-		event.preventDefault();
-	}, false);
+	
 	
 	
 	function updateDrawing() {
@@ -233,7 +279,13 @@
 			
 			//console.log( cp1.x, cp1.y )
 			points = '(' + x1 + ', ' + y1 + ', ' + x2 + ', ' + y2 + ')',
-			bezier = 'cubic-bezier' + points;
+			bezier = 'cubic-bezier' + points,
+			
+			easeName = $('#presets option:selected').text();
+			
+			if ( easeName.indexOf('custom') > -1 ) {
+				easeName = 'custom';
+			}
 		
 		// output code snippets
 		code.innerHTML = 
@@ -241,10 +293,12 @@
 						'; <br>&nbsp;&nbsp; -moz-transition: all ' + timeVal + 'ms ' + bezier +
 						'; <br>&nbsp;&nbsp;&nbsp;&nbsp; -o-transition: all ' + timeVal + 'ms ' + bezier +
 						'; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; transition: all ' + timeVal + 'ms ' + bezier +
-						'; </p><p> -webkit-transition-timing-function: ' + bezier +
+						'; /* ' + easeName + ' */</p>' +
+						'<p> -webkit-transition-timing-function: ' + bezier +
 						'; <br>&nbsp;&nbsp; -moz-transition-timing-function: ' + bezier +
 						'; <br>&nbsp;&nbsp;&nbsp;&nbsp; -o-transition-timing-function: ' + bezier +
-						'; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; transition-timing-function: ' + bezier + '; </p>';
+						'; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; transition-timing-function: ' + bezier +
+						'; /* ' + easeName + ' */</p>';
 		
 	}
 	

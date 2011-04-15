@@ -181,7 +181,7 @@ body {
 }
 
 #container {
-	width: 760px;
+	width: 790px;
 	margin: 0 auto;
 	padding: 25px 40px;
 	background-color: rgba(255,255,255,0.7);
@@ -383,16 +383,16 @@ label .text {
 	        transform: translateZ(0); /* to trigger GPU acceleration */
 }
 #box.left {
-    left: 430px;
+    left: 460px;
 }
 #box.opacity {
     opacity: 0;
 }
 #box.width {
-    width: 530px;
+    width: 560px;
 }
 #box.height {
-    height: 530px;
+    height: 560px;
 }
 
 #snippets {
