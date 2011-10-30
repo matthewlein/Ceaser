@@ -15,7 +15,7 @@
 
 	<link  href="http://fonts.googleapis.com/css?family=Neuton:regular" rel="stylesheet" type="text/css" >
 
-	<link rel="stylesheet" href="css/style.css?v=3">
+	<link rel="stylesheet" href="css/style.css?v=1.2">
 	
 	<script src="js/modernizr.custom.37368.js"></script>
 
@@ -37,6 +37,10 @@
 				<p>Now that we can use CSS transitions in all the modern browsers, let’s make them pretty. I love the classic Penner equations with Flash and jQuery, so I included most of those. If you’re anything like me*, you probably thought this about the default easing options: “ease-in, ease-out...yawn.” The mysterious cubic-bezier has a lot of potential, but was cumbersome to use. Until now.  <nobr>Also, touch-device</nobr> friendly!</p>
 
 				<small>*If you <em>are</em> anything like me, we should be friends <a href="http://twitter.com/matthewlein" target="_blank">@matthewlein</a></small>
+			    
+			    <p>
+			        <strong>Note:</strong> Bugfixes have landed, so the newest Webkit now supports values above 1 and below 0. For the time being, I am including fallback code for older Webkit that is clamped between 0 and 1 when needed.
+			    </p>
 			
 			</section>
 			
@@ -47,7 +51,7 @@
 			<div class="controls clearfix">
 				<div class="graph">
 					<figure>
-						<canvas id="curve" width="200" height="200"></canvas>
+						<canvas id="curve" width="200" height="450"></canvas>
 						<figcaption id="axisTime">Time</figcaption>
 						<figcaption id="axisAnimation">Animation (%)</figcaption>
 					</figure>
@@ -74,6 +78,7 @@
 								<option value="0.470, 0.000, 0.745, 0.715">easeInSine</option>
 								<option value="0.950, 0.050, 0.795, 0.035">easeInExpo</option>
 								<option value="0.600, 0.040, 0.980, 0.335">easeInCirc</option>
+								<option value="0.600, -0.280, 0.735, 0.045">easeInBack</option>
 				
 								<option value="0.250, 0.460, 0.450, 0.940">easeOutQuad</option>
 								<option value="0.215, 0.610, 0.355, 1.000">easeOutCubic</option>
@@ -82,6 +87,7 @@
 								<option value="0.390, 0.575, 0.565, 1.000">easeOutSine</option>
 								<option value="0.190, 1.000, 0.220, 1.000">easeOutExpo</option>
 								<option value="0.075, 0.820, 0.165, 1.000">easeOutCirc</option>
+								<option value="0.175, 0.885, 0.320, 1.275">easeOutBack</option>
 				
 								<option value="0.455, 0.030, 0.515, 0.955">easeInOutQuad</option>
 								<option value="0.645, 0.045, 0.355, 1.000">easeInOutCubic</option>
@@ -90,6 +96,10 @@
 								<option value="0.445, 0.050, 0.550, 0.950">easeInOutSine</option>
 								<option value="1.000, 0.000, 0.000, 1.000">easeInOutExpo</option>
 								<option value="0.785, 0.135, 0.150, 0.860">easeInOutCirc</option>
+								<option value="0.680, -0.550, 0.265, 1.550">easeInOutBack</option>
+								
+								
+                    			
 							</optgroup>
 							<optgroup label="custom">
 								<option value="0.500, 0.250, 0.500, 0.750">custom (drag the handles)</option>
@@ -129,25 +139,29 @@
 		<section id="resources">
 			<h2>Resources</h2>
 			<ul>
-				<li>Decent overview of CSS Transitions and Animation: <a href="http://css3.bradshawenterprises.com/" target="_blank">http://css3.bradshawenterprises.com/</a></li>
+				<li>Very nice overview of CSS Transitions and Animation: <a href="http://css3.bradshawenterprises.com/" target="_blank">http://css3.bradshawenterprises.com/</a></li>
 				<li>Jared Hardy’s Ceaser Compass extension: <a href="https://github.com/jhardy/compass-ceaser-easing" target="_blank">https://github.com/jhardy/compass-ceaser-easing</a></li>
+				<li>Excellent CSS3 LESS mixin by Matthew Wagerfield: <a href="https://github.com/MatthewWagerfield/LESS-CSS3-Mixins" target="_blank">https://github.com/MatthewWagerfield/LESS-CSS3-Mixins</a></li>	
 				<li>Ceaser TextMate Bundle: <a href="https://github.com/matthewlein/Ceaser-CSS-Easing-tmbundle" target="_blank">https://github.com/matthewlein/Ceaser-CSS-Easing-tmbundle</a></li>
+				<li>AppMobi did a simple how-to video for Ceaser <a href="http://youtu.be/xv92qmlqZa4" target="_blank">on Youtube</a></li>
 			</ul>
 		</section>
 
 		
 		<section id="needs">
-			<p><strong>Webkit/Safari/Chrome desicion-makers:</strong> Hoping Bug <a href="https://bugs.webkit.org/show_bug.cgi?id=45761" target="_blank">45761</a> gets fixed/implemented soon so I can add easeBack effects.</p>
+			<del datetime="2011-10-12T21:45:23-0400"><p><strong>Webkit/Safari/Chrome desicion-makers:</strong> Hoping Bug <a href="https://bugs.webkit.org/show_bug.cgi?id=45761" target="_blank">45761</a> gets fixed/implemented soon so I can add easeBack effects.</p></del>
+			<p>
+			    Let the good times roll!
+			</p>
 		</section>
 		
 		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write("<script src='js/jquery-1.5.1.min.js'>\x3C/script>")</script>
 
-		<script src="js/ceaser.1.1.3.min.js"></script>
-		<script>
-			
-		</script>
+        <script src="js/ceaser.1.2.min.js"></script>
+        <!-- <script src="js/ceaser.1.1.3.min.js"></script> -->
+
 
 		
 		<section id="comments">

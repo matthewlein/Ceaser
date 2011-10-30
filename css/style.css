@@ -249,6 +249,10 @@ ol {
 ol li {
 	margin-bottom: 13px;
 }
+small {
+    margin-bottom: 13px;
+    display: block;
+}
 
 .twitter-share-button {
 	position: absolute;
@@ -263,12 +267,11 @@ ol li {
 
 
 .demo {
-	padding: 30px 0;
+	padding: 0 0 30px 0;
 	border-top: 1px solid #F0EFEB;
 }
 	
 	.controls {
-		padding-bottom: 20px;
 		border-bottom: 1px solid #fff;
 	}
 	
@@ -278,7 +281,6 @@ ol li {
 		}
 
 canvas {
-	outline: 1px solid #999;
 	display: block;
 	cursor: pointer;
 }
@@ -287,7 +289,6 @@ figure {
 	display: block;
 	position: relative;
 	padding-left: 20px;
-	padding-bottom: 20px;
 	width: 200px;
 }
 figcaption {
@@ -297,7 +298,7 @@ figcaption {
 
 #axisAnimation {
 	left: -33px;
-	top: 90px;
+	top: 210px;
 	-webkit-transform: rotate(-90deg);
 	   -moz-transform: rotate(-90deg);
 		 -o-transform: rotate(-90deg);
@@ -305,11 +306,15 @@ figcaption {
 }
 #axisTime {
 	left: 100px;
-	padding-top: 4px;
+	top: 335px;
 }
 
 .options {
-	margin-left: 230px;
+    margin-top: 130px;
+	margin-left: 30px;
+	width: 560px;
+    float: left;
+
 }
 
 label {
