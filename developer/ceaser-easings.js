@@ -5,6 +5,7 @@ var ceaser = {
     'easeOut'           : 'ease-out',
     'easeInOut'         : 'ease-in-out',
     // Penner equations
+    'easeInCubic'       : 'cubic-bezier(.55,.055,.675,.19)',
     'easeOutCubic'      : 'cubic-bezier(.215,.61,.355,1)',
     'easeInOutCubic'    : 'cubic-bezier(.645,.045,.355,1)',
     'easeInCirc'        : 'cubic-bezier(.6,.04,.98,.335)',
