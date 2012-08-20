@@ -1,5 +1,6 @@
 var ceaser = {
     // defaults
+    'linear'            : 'linear',
     'ease'              : 'ease',
     'easeIn'            : 'ease-in',
     'easeOut'           : 'ease-out',
