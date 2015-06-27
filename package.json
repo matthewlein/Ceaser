@@ -1,0 +1,23 @@
+{
+  "name": "ceaser",
+  "version": "1.0.0",
+  "description": "A set of CSS easings",
+  "main": "js/ceaser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashtonwar/Ceaser.git"
+  },
+  "keywords": [
+    "CSS",
+    "transitions"
+  ],
+  "author": "Mathew Lewin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashtonwar/Ceaser/issues"
+  },
+  "homepage": "http://matthewlein.com/ceaser/"
+}
